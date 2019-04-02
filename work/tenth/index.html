@@ -68,6 +68,106 @@
       //
       //
       //
+      $(function(){
+        var page = 1;
+        var word_cash = "";
+        $("#js-search-button").click(function(){
+          var word = $("#js-search-word").val();
+          if(word_cash != word){
+            page = 1;
+          }
+          word_cash = word;
+          $.ajax({
+            url: 'https:app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+            type: 'GET',
+            datatype: 'json',
+            data: {
+              applicationId: '1019399324990976605',
+              keyword: word,
+              hits: 20,
+              booksGenreId: '001',
+              page: page
+            },
+          }).done(function(data){
+            console.log(data.count);
+            page = page+1;
+            if(data.count > 0){
+              makeList(data);
+            }else{
+              emptyresult();
+            }
+          }).fail(function(HttpRequst, textStatus, errThrown){
+            var ul = $('.lists');
+            ul.empty();
+            explainerr(HttpRequst,textStatus,errThrown);
+          });
+        });
+      }); //$(function(){})の閉じかっこ
+      function search(){
+
+      }
+      function makeList(data){
+        var itemlist = data.Items;
+        var ul = $('.lists');
+        ul.empty();
+        $.each(itemlist,function(idx,item){
+          var linkurl = item.Item.itemUrl;
+          var imgsrc = item.Item.largeImageUrl;
+          var list = $("<li>",{
+                        class: 'lists__item'
+          });
+          var inner = $("<div>",{
+                         class: "lists__item__inner"
+          });
+          var link = $("<a>",{
+                       href: linkurl,
+                       class: 'lists__item__link',
+                       target: '_blank'
+          });
+          var img = $("<img>",{
+                       src: imgsrc,
+                       class: 'lists__item__img',
+                       alt: ''
+          });
+          var p1 = $("<p>",{
+                     class: 'lists__item__detail'
+          });
+          var p2 = $("<p>",{
+                     class: 'lists__item__detail'
+          });
+          var p3 = $("<p>",{
+                     class: 'lists__item__detail'
+          });
+          p1.html(item.Item.title);
+          p2.html(item.Item.author);
+          p3.html(item.Item.publisherName);
+          link.append(img);
+          link.append(p1);
+          link.append(p2);
+          link.append(p3);
+          inner.append(link);
+          list.append(inner);
+          ul.append(list);
+        });
+      }
+      function emptyresult(){
+        var messagebox = $("<div>",{
+                        class: 'message'
+        });
+        var message = "検索結果が見つかりませんでした。<br>別のキーワードで検索してください。";
+        messagebox.html(message);
+        $(".lists").before(messagebox);
+      }
+      function explainerr(HttpRequst, textStatus, errThrown){
+        var response = $.parseJSON(HttpRequst.responseText);
+        var messagebox = $("<div>",{
+                        class: 'message',
+                        style: 'color: red'
+        });
+        var message = "エラーコード:"+HttpRequst.status+"<br>"+response.error_description;
+        messagebox.html(message);
+        $(".lists").before(messagebox);
+      }
     </script>
   </body>
 </html>

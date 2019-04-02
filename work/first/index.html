@@ -79,6 +79,44 @@
 // 第8問  id='q8'の要素をhoverしたらlargeというクラスを付与し、hoverが外れたら、クラスを削除せよ。
 // 第9問  id='q9'の要素をクリックしたらこの要素に設定してあるdata属性をconsoleに表示せよ。
 // 第10問 id='q10'の子要素をクリックしたら、その要素のインデックスと等しいid='q11'の子要素にlargeというクラスを追加せよ。
+$(function(){
+  $("#q1").css('color','red');
+  $("#q2").click(function(){
+    $(this).css('background-color','#f442d1');
+  });
+  $("#q3").click(function(){
+    $(this).fadeOut(2000);
+  });
+  $("#q4").click(function(){
+    $(this).before("DOMの前");
+    $(this).after("DOMの後");
+    $(this).prepend("DOM内の前");
+    $(this).append("DOM内の後");
+  });
+  $("#q5").click(function(){
+    $(this).addClass("large");
+  });
+  $("#q6").click(function(){
+    $(this).animate({marginTop: "100px",marginLeft: "100px"},2000);
+  });
+  $("#q7").children().click(function(){
+    var index = $("#q7").children().index(this);
+    console.log(index);
+    alert(index);
+  });
+  $("#q8").hover(function(){
+    $(this).addClass('large');
+  },function(){
+    $(this).removeClass('large');
+  })
+});
+$("#q9").click(function(){
+  console.log($(this).data('text'));
+});
+$("#q10").children().click(function(){
+  var idx = $("#q10").children().index(this);
+  $("#q11>li").eq(idx).addClass('large');
+});
 </script>
 </body>
 </html>
