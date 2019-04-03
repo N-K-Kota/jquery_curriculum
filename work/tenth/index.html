@@ -74,6 +74,7 @@
         $("#js-search-button").click(function(){
           var word = $("#js-search-word").val();
           if(word_cash != word){
+            $(".lists").empty();
             page = 1;
           }
           word_cash = word;
@@ -89,7 +90,6 @@
               page: page
             },
           }).done(function(data){
-            console.log(data.count);
             page = page+1;
             if(data.count > 0){
               makeList(data);
@@ -97,8 +97,6 @@
               emptyresult();
             }
           }).fail(function(HttpRequst, textStatus, errThrown){
-            var ul = $('.lists');
-            ul.empty();
             explainerr(HttpRequst,textStatus,errThrown);
           });
         });
@@ -106,10 +104,9 @@
       function search(){
 
       }
-      function makeList(data){
-        var itemlist = data.Items;
+      function makeList(data,page){
+        var itemlist = data.Items.reverse();
         var ul = $('.lists');
-        ul.empty();
         $.each(itemlist,function(idx,item){
           var linkurl = item.Item.itemUrl;
           var imgsrc = item.Item.largeImageUrl;
@@ -147,26 +144,31 @@
           link.append(p3);
           inner.append(link);
           list.append(inner);
-          ul.append(list);
+          ul.prepend(list);
         });
       }
       function emptyresult(){
-        var messagebox = $("<div>",{
+        var ul = $('.lists');
+        ul.empty();
+        var messagebox = $("<li>",{
                         class: 'message'
         });
         var message = "検索結果が見つかりませんでした。<br>別のキーワードで検索してください。";
         messagebox.html(message);
-        $(".lists").before(messagebox);
+        ul.append(messagebox);
       }
-      function explainerr(HttpRequst, textStatus, errThrown){
-        var response = $.parseJSON(HttpRequst.responseText);
-        var messagebox = $("<div>",{
+      function explainerr(HttpRequest, textStatus, errThrown){
+        var ul = $('.lists');
+        ul.empty();
+        console.log(HttpRequest.responseText);
+        var response = $.parseJSON(HttpRequest.responseText);
+        var messagebox = $("<li>",{
                         class: 'message',
                         style: 'color: red'
         });
-        var message = "エラーコード:"+HttpRequst.status+"<br>"+response.error_description;
+        var message = "エラーコード:"+HttpRequest.status+"<br>"+response.error_description;
         messagebox.html(message);
-        $(".lists").before(messagebox);
+        $(".lists").append(messagebox);
       }
     </script>
   </body>

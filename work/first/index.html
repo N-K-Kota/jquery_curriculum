@@ -99,7 +99,7 @@ $(function(){
   $("#q6").click(function(){
     $(this).animate({marginTop: "100px",marginLeft: "100px"},2000);
   });
-  $("#q7").children().click(function(){
+  $("#q7").on('click','li',function(){
     var index = $("#q7").children().index(this);
     console.log(index);
     alert(index);

@@ -101,10 +101,10 @@
         $('.select').change(function(){
           var value = $(this).val();
           $('.list').children().each(function(){
-            if(value=='all'){
+            if(value==='all'){
               $(this).show();
             }
-            else if(value == $(this).data('categoryType')){
+            else if(value === $(this).data('categoryType')){
               $(this).show();
             }else{
               $(this).hide();

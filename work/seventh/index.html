@@ -38,16 +38,7 @@
         var slider = $('.slider-list');
         var idx = 0;
         var positionarray = [0,'-600px','-1200px','-1800px'];
-        var list1 = $('<li></li>');
-        var list4 = $('<li></li>');
-        var img1 = $("<img>",{
-          src:"./img/1.jpg"
-        });
-        var img4 = $("<img>",{
-          src: "./img/4.jpg"
-        });
-        list1.append(img1);
-        list4.append(img4);
+        
         $('.is-prev').click(function(){
           idx = (idx == 0) ? 3 : idx-1;
           slider.animate({left: positionarray[idx]},500);

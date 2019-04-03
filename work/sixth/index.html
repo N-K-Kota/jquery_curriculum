@@ -30,8 +30,8 @@
         $('.input').keyup(function(){
           var num = $(this).val().replace(/\s+/g,'').length;
           var rest = 30-num;
-          if(rest > 0){
-            $('.rest-count').removeClass('.red');
+          if(rest >= 0){
+            $('.rest-count').removeClass('red');
           }else{
             $('.rest-count').addClass('red');
           }

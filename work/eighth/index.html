@@ -49,7 +49,6 @@
           var data = $(this).data('scrollPlaceType');
           titlelist.each(function(){
             if($(this).data('scrollPlaceType') == data){
-              console.log($(this).offset());
               $("html,body").animate({scrollTop: $(this).offset().top});
             }
           });
