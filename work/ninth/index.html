@@ -53,12 +53,9 @@
       });
 
       function makecolorsList(data){
-        $.each(data.colorsArray,function(){
-          var elm = `<li class="colorList__item">
-                      <p class="colorList__title" style="background-color:${this.hexValue};">
-                        ${this.colorName}
-                      </p>
-                    </li>`;
+        $.each(data.colorsArray,function(idnex,elm){
+          var elm = "<li class='colorList__item'><p class='colorList__title' style='background-color:"+elm.hexValue
+          +"'>"+elm.colorName+"</p></li>";
           $('.colorList').append(elm);
         });
       }

@@ -34,13 +34,15 @@
         $(".nav").children().click(function(){
           var idx = $(this).index();
           var lists = $(".contents").children();
-          for(var i=0;i<lists.length;i++){
-            if(i == idx){
-              lists.eq(i).removeClass('is-hidden');
-            }else{
-              lists.eq(i).addClass('is-hidden');
-            }
-          }
+          // for(var i=0;i<lists.length;i++){
+          //   if(i == idx){
+          //     lists.eq(i).removeClass('is-hidden');
+          //   }else{
+          //     lists.eq(i).addClass('is-hidden');
+          //   }
+          // }
+          lists.addClass('is-hidden');
+          lists.eq(idx).removeClass('is-hidden');
         });
       });
     </script>

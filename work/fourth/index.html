@@ -58,12 +58,10 @@
       // .stop() 現在動作中のアニメーション処理を全て中止します。
       $(function(){
         $(".menu__list").children().hover(function(){
-          var menu = $(this).children().eq(0);
-          menu.next().slideDown();
+          $(this).children('.menu__list__childList').stop().slideDown();
         },function(){
           var menu = $(this).children().eq(0);
-          menu.next().stop();
-          menu.next().slideUp();
+          menu.next().stop().slideUp();
         });
       });
     </script>

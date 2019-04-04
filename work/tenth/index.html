@@ -69,60 +69,53 @@
       //
       //
       $(function(){
-
-        var searchinfo = {page: 1,word_cache: ""}
+        var searchinfo = {page: 1,word_cache: ""};
         $("#js-search-button").click(function(){
           search(searchinfo);
         });
       }); //$(function(){})の閉じかっこ
 
       function makeList(data){
-        var itemlist = data.Items.reverse();
+        var itemlist = data.Items;
         var ul = $('.lists');
+        var liststext = "";
         $.each(itemlist,function(idx,item){
           var linkurl = item.Item.itemUrl;
           var imgsrc = item.Item.largeImageUrl;
-          var element = `<li class='lists__item'>
-              <div class='lists__item__inner'>
-              <a href='${linkurl}' class='lists__item__link' target='_blank'>
-                <img src='${imgsrc}' class='lists__item__img' alt=''>
-                <p class='lists__item__detail'>${item.Item.title}</p>
-                <p class='lists__item__detail'>${item.Item.author}</p>
-                <p class='lists__item__detail'>${item.Item.publisherName}</p>
-              </a>
-            </div>
-           </li>
-          `;
-          var list = $(element);
-          ul.prepend(list);
+          var element = "<li class='lists__item'><div class='lists__item__inner'><a href='"
+            +linkurl+"' class='lists__item__link' target='_blank'><img src='"
+            +imgsrc+"' class='lists__item__img' alt=''><p class='lists__item__detail'>作品名："
+            +item.Item.title+"</p><p class='lists__item__detail'>作者　："
+            +item.Item.author+"</p><p class='lists__item__detail'>出版社："
+            +item.Item.publisherName+"</p></a></div></li>";
+          liststext += element;
         });
+        ul.prepend(liststext);
       }
+
       function emptyresult(){
         var ul = $('.lists');
         ul.empty();
-        var messagebox = $("<li>",{
-                        class: 'message'
-        });
         var message = "検索結果が見つかりませんでした。<br>別のキーワードで検索してください。";
-        messagebox.html(message);
+        var messagebox = `<li class="message">${message}</li>`;
         ul.append(messagebox);
       }
       function explainerr(HttpRequest, textStatus, errThrown){
         var ul = $('.lists');
         ul.empty();
-      
-        var response = $.parseJSON(HttpRequest.responseText);
+        console.log();
         var messagebox = $("<li>",{
                         class: 'message',
                         style: 'color: red'
         });
-        var message = "エラーコード:"+HttpRequest.status+"<br>"+response.error_description;
+        var message = "エラーコード:"+HttpRequest.status+"<br>"+HttpRequest.responseJSON.error_description;
         messagebox.html(message);
         $(".lists").append(messagebox);
       }
+
       function search(pageinfo){
         var word = $("#js-search-word").val();
-        if(pageinfo.word_cache != word){
+        if(pageinfo.word_cache !== word){
           $(".lists").empty();
           pageinfo.page = 1;
         }
@@ -145,8 +138,8 @@
           }else{
             emptyresult();
           }
-        }).fail(function(HttpRequst, textStatus, errThrown){
-          explainerr(HttpRequst,textStatus,errThrown);
+        }).fail(function(HttpRequest, textStatus, errThrown){
+          explainerr(HttpRequest,textStatus,errThrown);
         });
       }
     </script>

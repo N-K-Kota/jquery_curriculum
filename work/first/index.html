@@ -88,10 +88,10 @@ $(function(){
     $(this).fadeOut(2000);
   });
   $("#q4").click(function(){
-    $(this).before("DOMの前");
-    $(this).after("DOMの後");
-    $(this).prepend("DOM内の前");
-    $(this).append("DOM内の後");
+    $(this).before("DOMの前")
+      .after("DOMの後")
+      .prepend("DOM内の前")
+      .append("DOM内の後");
   });
   $("#q5").click(function(){
     $(this).addClass("large");
