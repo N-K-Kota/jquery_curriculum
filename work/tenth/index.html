@@ -21,7 +21,7 @@
           </div>
           <button id="js-search-button" class="search__btn">検索する</button>
         </div>
-        <ul class="lists"></ul>
+        <ul class="lists"><li></li></ul>
       </div>
     </div>
     <script src="../../common/js/jquery.js"></script>
@@ -69,81 +69,31 @@
       //
       //
       $(function(){
-        var page = 1;
-        var word_cash = "";
+
+        var searchinfo = {page: 1,word_cache: ""}
         $("#js-search-button").click(function(){
-          var word = $("#js-search-word").val();
-          if(word_cash != word){
-            $(".lists").empty();
-            page = 1;
-          }
-          word_cash = word;
-          $.ajax({
-            url: 'https:app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-            type: 'GET',
-            datatype: 'json',
-            data: {
-              applicationId: '1019399324990976605',
-              keyword: word,
-              hits: 20,
-              booksGenreId: '001',
-              page: page
-            },
-          }).done(function(data){
-            page = page+1;
-            if(data.count > 0){
-              makeList(data);
-            }else{
-              emptyresult();
-            }
-          }).fail(function(HttpRequst, textStatus, errThrown){
-            explainerr(HttpRequst,textStatus,errThrown);
-          });
+          search(searchinfo);
         });
       }); //$(function(){})の閉じかっこ
-      function search(){
 
-      }
-      function makeList(data,page){
+      function makeList(data){
         var itemlist = data.Items.reverse();
         var ul = $('.lists');
         $.each(itemlist,function(idx,item){
           var linkurl = item.Item.itemUrl;
           var imgsrc = item.Item.largeImageUrl;
-          var list = $("<li>",{
-                        class: 'lists__item'
-          });
-          var inner = $("<div>",{
-                         class: "lists__item__inner"
-          });
-          var link = $("<a>",{
-                       href: linkurl,
-                       class: 'lists__item__link',
-                       target: '_blank'
-          });
-          var img = $("<img>",{
-                       src: imgsrc,
-                       class: 'lists__item__img',
-                       alt: ''
-          });
-          var p1 = $("<p>",{
-                     class: 'lists__item__detail'
-          });
-          var p2 = $("<p>",{
-                     class: 'lists__item__detail'
-          });
-          var p3 = $("<p>",{
-                     class: 'lists__item__detail'
-          });
-          p1.html(item.Item.title);
-          p2.html(item.Item.author);
-          p3.html(item.Item.publisherName);
-          link.append(img);
-          link.append(p1);
-          link.append(p2);
-          link.append(p3);
-          inner.append(link);
-          list.append(inner);
+          var element = `<li class='lists__item'>
+              <div class='lists__item__inner'>
+              <a href='${linkurl}' class='lists__item__link' target='_blank'>
+                <img src='${imgsrc}' class='lists__item__img' alt=''>
+                <p class='lists__item__detail'>${item.Item.title}</p>
+                <p class='lists__item__detail'>${item.Item.author}</p>
+                <p class='lists__item__detail'>${item.Item.publisherName}</p>
+              </a>
+            </div>
+           </li>
+          `;
+          var list = $(element);
           ul.prepend(list);
         });
       }
@@ -160,7 +110,7 @@
       function explainerr(HttpRequest, textStatus, errThrown){
         var ul = $('.lists');
         ul.empty();
-        console.log(HttpRequest.responseText);
+      
         var response = $.parseJSON(HttpRequest.responseText);
         var messagebox = $("<li>",{
                         class: 'message',
@@ -169,6 +119,35 @@
         var message = "エラーコード:"+HttpRequest.status+"<br>"+response.error_description;
         messagebox.html(message);
         $(".lists").append(messagebox);
+      }
+      function search(pageinfo){
+        var word = $("#js-search-word").val();
+        if(pageinfo.word_cache != word){
+          $(".lists").empty();
+          pageinfo.page = 1;
+        }
+        pageinfo.word_cache = word;
+        $.ajax({
+          url: 'https:app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+          type: 'GET',
+          datatype: 'json',
+          data: {
+            applicationId: '1019399324990976605',
+            keyword: word,
+            hits: 20,
+            booksGenreId: '001',
+            page: pageinfo.page
+          },
+        }).done(function(data){
+          pageinfo.page += 1;
+          if(data.count > 0){
+            makeList(data);
+          }else{
+            emptyresult();
+          }
+        }).fail(function(HttpRequst, textStatus, errThrown){
+          explainerr(HttpRequst,textStatus,errThrown);
+        });
       }
     </script>
   </body>

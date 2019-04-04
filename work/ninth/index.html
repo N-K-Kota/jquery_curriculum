@@ -54,17 +54,12 @@
 
       function makecolorsList(data){
         $.each(data.colorsArray,function(){
-          var list = $("<li>",{
-            class: "colorList__item"
-          });
-          var colorname = "background-color:"+this.hexValue;
-          var par = $("<p>",{
-            class: "colorList__title",
-            style: colorname
-          });
-          par.html(this.colorName);
-          list.append(par);
-          $('.colorList').append(list);
+          var elm = `<li class="colorList__item">
+                      <p class="colorList__title" style="background-color:${this.hexValue};">
+                        ${this.colorName}
+                      </p>
+                    </li>`;
+          $('.colorList').append(elm);
         });
       }
     </script>

@@ -100,7 +100,7 @@
       $(function(){
         $('.select').change(function(){
           var value = $(this).val();
-          $('.list').children().each(function(){
+          $('.list').children().each(function(index,elm){
             if(value==='all'){
               $(this).show();
             }
