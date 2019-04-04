@@ -96,19 +96,23 @@
       function emptyresult(){
         var ul = $('.lists');
         ul.empty();
-        var message = "検索結果が見つかりませんでした。<br>別のキーワードで検索してください。";
-        var messagebox = `<li class="message">${message}</li>`;
-        ul.append(messagebox);
+        var message = '<li class="message">検索結果が見つかりませんでした。<br>別のキーワードで検索してください。</li>';
+        ul.append(message);
       }
-      function explainerr(HttpRequest, textStatus, errThrown){
-        var ul = $('.lists');
-        ul.empty();
-        console.log();
+
+      function explainerr(response){
         var messagebox = $("<li>",{
                         class: 'message',
                         style: 'color: red'
         });
-        var message = "エラーコード:"+HttpRequest.status+"<br>"+HttpRequest.responseJSON.error_description;
+        var ul = $('.lists');
+        ul.empty();
+        if(response.responseJSON == undefined){
+          var message = "通信エラーが発生しました。状況を確認してもう一度検索してみてください。";
+        }else{
+          var err = response.responseJSON;
+          var message = "エラーコード:"+response.status+"<br>"+err.error+"<br>"+err.error_description;
+        }
         messagebox.html(message);
         $(".lists").append(messagebox);
       }
@@ -118,11 +122,14 @@
         if(pageinfo.word_cache !== word){
           $(".lists").empty();
           pageinfo.page = 1;
+          pageinfo.word_cache = word;
+        }else{
+          pageinfo.page += 1;
         }
-        pageinfo.word_cache = word;
         $.ajax({
           url: 'https:app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
+          timeout: 10000,
           datatype: 'json',
           data: {
             applicationId: '1019399324990976605',
@@ -132,15 +139,15 @@
             page: pageinfo.page
           },
         }).done(function(data){
-          pageinfo.page += 1;
           if(data.count > 0){
             makeList(data);
           }else{
             emptyresult();
           }
-        }).fail(function(HttpRequest, textStatus, errThrown){
-          explainerr(HttpRequest,textStatus,errThrown);
+        }).fail(function(err){
+          explainerr(err);
         });
+
       }
     </script>
   </body>
